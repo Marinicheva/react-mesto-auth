@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { Route } from 'react-router-dom';
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 
 import Header from "./Header";
+import Login from './Login';
 import Main from "./Main";
 import Footer from "./Footer";
 import EditProfilePopup from "./EditProfilePopup";
@@ -129,18 +131,20 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
+
         <Header />
-
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteCardClick}
-        />
-
+        <Login />
+        <Route exact path="/">
+          {/* <Main
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardClick}
+          /> */}
+        </Route>
         <Footer />
 
         <EditProfilePopup

@@ -1,4 +1,6 @@
 .header {
+    display: flex;
+    justify-content: space-between;
     margin: 0 auto;
     max-width: 880px;
     padding: 44px 0 38px;

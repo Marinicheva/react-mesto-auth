@@ -6,6 +6,7 @@ function Header() {
       <a href="#" className="header__link">
         <img src={logo} alt="Логотип сервиса Mesto" className="header__logo" />
       </a>
+      <a href="#" className="header__link">Войти</a>
     </header>
   );
 }
