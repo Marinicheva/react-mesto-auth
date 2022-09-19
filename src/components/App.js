@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { Route } from 'react-router-dom';
+import { Route } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 
 import Header from "./Header";
-import Login from './Login';
+import Login from "./Login";
+// import SignIn from './SignIn';
 import Main from "./Main";
 import Footer from "./Footer";
+import PopupWithAlert from "./PopupWithAlert";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
@@ -130,64 +132,60 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-
-        <Header />
-        <Login />
-        <Route exact path="/">
-          {/* <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCardClick}
-          /> */}
-        </Route>
-        <Footer />
-
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}
-          isRenderLoading={isRenderLoading}
-          renderLoading={renderLoading}
-          renderLoadingButtonText={"Сохранение..."}
+      <Header />
+      <Login />
+      {/* <SignIn /> */}
+      <Route exact path="/">
+        <Main
+          cards={cards}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleDeleteCardClick}
         />
+      </Route>
+      <Footer />
 
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}
-          isRenderLoading={isRenderLoading}
-          renderLoading={renderLoading}
-          renderLoadingButtonText={"Обновление..."}
-        />
+      {/* <PopupWithAlert /> */}
 
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddNewCard={handleAddPlaceSubmit}
-          isRenderLoading={isRenderLoading}
-          renderLoading={renderLoading}
-          renderLoadingButtonText={"Добавление..."}
-        />
+      <EditProfilePopup
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
+        onUpdateUser={handleUpdateUser}
+        isRenderLoading={isRenderLoading}
+        renderLoading={renderLoading}
+        renderLoadingButtonText={"Сохранение..."}
+      />
 
-        <DeleteCardPopup
-          isOpen={isDeleteCardPopupOpen}
-          onClose={closeAllPopups}
-          isRenderLoading={isRenderLoading}
-          renderLoading={renderLoading}
-          onDeleteCard={handleCardDelete}
-        />
+      <EditAvatarPopup
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}
+        isRenderLoading={isRenderLoading}
+        renderLoading={renderLoading}
+        renderLoadingButtonText={"Обновление..."}
+      />
 
-        <ImagePopup 
-          card={selectedCard}
-          onClose={closeAllPopups} 
-        />
-        
-      </div>
+      <AddPlacePopup
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
+        onAddNewCard={handleAddPlaceSubmit}
+        isRenderLoading={isRenderLoading}
+        renderLoading={renderLoading}
+        renderLoadingButtonText={"Добавление..."}
+      />
+
+      <DeleteCardPopup
+        isOpen={isDeleteCardPopupOpen}
+        onClose={closeAllPopups}
+        isRenderLoading={isRenderLoading}
+        renderLoading={renderLoading}
+        onDeleteCard={handleCardDelete}
+      />
+
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </CurrentUserContext.Provider>
   );
 }
