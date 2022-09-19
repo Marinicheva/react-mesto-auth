@@ -3,9 +3,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 import Header from "./Header";
 import Login from "./Login";
-import Register from './Register';
+import Register from "./Register";
 import Main from "./Main";
 import Footer from "./Footer";
 import InfoTooltip from "./InfoTooltip";
@@ -135,24 +137,21 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <Header loggedIn={loggedIn} />
       <Switch>
-        <Route path="/register">{<Register />}</Route>
-        <Route path="/login"><Login /></Route>
-        
-        <Route exact path="/cards">
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCardClick}
-          />
-        </Route>
+        <Route path="/signup">{<Register />}</Route>
+        <Route path="/signin">{<Login />}</Route>
 
-        <Route exact path="/">
-          {loggedIn ? <Redirect to="/cards" /> : <Redirect to="/login"/>}
-        </Route>
+        <ProtectedRoute
+          path="/"
+          loggedIn={loggedIn}
+          component={Main}
+          cards={cards}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleDeleteCardClick}
+        />
       </Switch>
       <Footer />
 
