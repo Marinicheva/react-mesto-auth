@@ -1,4 +1,4 @@
-function SignIn() {
+function Register() {
   return (
     <div className="login">
       <h2 className="login__title">Вход</h2>
@@ -13,4 +13,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default Register;

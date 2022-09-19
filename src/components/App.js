@@ -5,10 +5,10 @@ import api from "../utils/api";
 
 import Header from "./Header";
 // import Login from "./Login";
-// import SignIn from './SignIn';
+// import Register from './SignIn';
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithAlert from "./PopupWithAlert";
+// import PopupWithAlert from "./PopupWithAlert";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
@@ -17,6 +17,7 @@ import ImagePopup from "./ImagePopup";
 
 function App() {
   //Стейты
+  const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -132,8 +133,8 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
-      {/* <Login /> */}
+      <Header loggedIn={loggedIn} />
+      {/* <Register /> */}
       {/* <SignIn /> */}
       <Route exact path="/">
         <Main
@@ -148,7 +149,7 @@ function App() {
       </Route>
       <Footer />
 
-      <PopupWithAlert />
+      {/* <PopupWithAlert /> */}
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
