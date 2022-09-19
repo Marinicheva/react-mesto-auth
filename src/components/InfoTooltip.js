@@ -1,9 +1,9 @@
 import successIcon from '../images/success-login.svg';
-import errorIcon from '../images/error-signin.svg';
+import errorIcon from '../images/error-login.svg';
 
-function PopupWithAlert() {
+function InfoTooltip() {
   return (
-    <div className="popup popup_type_alert popup_opened">
+    <div className="popup popup_type_alert">
       <div className="popup__container">
         <img src={successIcon} alt="" className="popup__icon" />
         <h2 className="popup__title popup__title_align_center">Вы успешно зарегистрировались!</h2>
@@ -16,4 +16,4 @@ function PopupWithAlert() {
   );
 }
 
-export default PopupWithAlert;
+export default InfoTooltip;

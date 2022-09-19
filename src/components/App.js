@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 
 import Header from "./Header";
-// import Login from "./Login";
-// import Register from './SignIn';
+import Login from "./Login";
+import Register from './Register';
 import Main from "./Main";
 import Footer from "./Footer";
-// import PopupWithAlert from "./PopupWithAlert";
+import InfoTooltip from "./InfoTooltip";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
@@ -134,22 +134,29 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header loggedIn={loggedIn} />
-      {/* <Register /> */}
-      {/* <SignIn /> */}
-      <Route exact path="/">
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteCardClick}
-        />
-      </Route>
+      <Switch>
+        <Route path="/register">{<Register />}</Route>
+        <Route path="/login"><Login /></Route>
+        
+        <Route exact path="/cards">
+          <Main
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardClick}
+          />
+        </Route>
+
+        <Route exact path="/">
+          {loggedIn ? <Redirect to="/cards" /> : <Redirect to="/login"/>}
+        </Route>
+      </Switch>
       <Footer />
 
-      {/* <PopupWithAlert /> */}
+      <InfoTooltip />
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
