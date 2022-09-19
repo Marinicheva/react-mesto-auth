@@ -4,7 +4,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 
 import Header from "./Header";
-import Login from "./Login";
+// import Login from "./Login";
 // import SignIn from './SignIn';
 import Main from "./Main";
 import Footer from "./Footer";
@@ -133,7 +133,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
-      <Login />
+      {/* <Login /> */}
       {/* <SignIn /> */}
       <Route exact path="/">
         <Main
@@ -148,7 +148,7 @@ function App() {
       </Route>
       <Footer />
 
-      {/* <PopupWithAlert /> */}
+      <PopupWithAlert />
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
