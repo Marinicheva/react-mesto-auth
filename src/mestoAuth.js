@@ -39,7 +39,7 @@ export const authorization = (email, password) => {
     }
   })
   .then(res => res)
-  .catch(res => {
-    console.log(res)
+  .catch((error) => {
+    console.log(error)
   });
 }

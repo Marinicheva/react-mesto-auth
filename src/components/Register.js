@@ -1,7 +1,9 @@
-import { useState, createRef } from "react";
+import { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 import * as auth from "../mestoAuth";
 
 function Register() {
+  const history = useHistory();
   const [userData, setUserData] = useState({ email: "", password: "" });
 
   const handleChangeInput = (evt) => {
@@ -15,12 +17,14 @@ function Register() {
 
     auth
       .registration(email, password)
-      .then(() => setUserData({ email: "", password: "" }));
-    // .then(Перенаправить на страницу входа);
+      .then(() => setUserData({ email: "", password: "" }))
+      .then(() => 
+        history.push('/sign-in'));
   };
 
   return (
     <div className="login">
+      <Link to="sign-in">Войти</Link>
       <h2 className="login__title">Регистрация</h2>
       <form action="#" className="login__form" onSubmit={handleSubmit}>
         <fieldset className="login__fieldset">
@@ -43,9 +47,9 @@ function Register() {
           Зарегистрироваться
         </button>
       </form>
-      <a href="#" className="login__link">
+      <Link to="/sign-in" className="login__link">
         Уже зарегистрированы? Войти
-      </a>
+      </Link>
     </div>
   );
 }

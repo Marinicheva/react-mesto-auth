@@ -133,12 +133,24 @@ function App() {
       .finally(() => renderLoading());
   };
 
+  //Изменения стейта после авторизации пользователя
+  const onSubmitLogin = (value) => {
+    setLoggedIn(value);
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header loggedIn={loggedIn} />
+
+    
       <Switch>
-        <Route path="/signup">{<Register />}</Route>
-        <Route path="/signin">{<Login />}</Route>
+        <Route path="/sign-up">
+          {<Register />}
+        </Route>
+
+        <Route path="/sign-in">
+          {<Login onSubmitLogin={onSubmitLogin} />}
+        </Route>
 
         <ProtectedRoute
           path="/"
@@ -152,7 +164,13 @@ function App() {
           onCardLike={handleCardLike}
           onCardDelete={handleDeleteCardClick}
         />
+
+        <Route path="*">
+          { loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" /> }
+        </Route>
       </Switch>
+
+
       <Footer />
 
       <InfoTooltip />

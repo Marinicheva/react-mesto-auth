@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import * as auth from '../mestoAuth';
 
-function Login() {
+function Login(props) {
+  const history = useHistory();
 
   const [loginData, setLoginData] = useState({email: '', password: ''});
 
@@ -15,15 +17,24 @@ function Login() {
     const {email, password} = loginData;
 
     auth.authorization(email, password)
-      .then(data => console.log(data));
-      //сохранить токен в локалсторэдж
-      //Изменить стейт loggedIn
-      //Перенаправить на /
+      .then((data) => {
+        if(data) {
+          localStorage.setItem('token', data.token)
+        }
+      })
+      .then(() => {
+        props.onSubmitLogin(true);
+      })
+      .then(() => {
+        history.push("/");
+      });
+      
   }
 
   
   return (
     <div className="login">
+      <Link to="/sign-up">Регистрация</Link>
       <h2 className="login__title">Вход</h2>
       <form action="#" className="login__form" onSubmit={handleSubmit}>
         <fieldset className="login__fieldset">
