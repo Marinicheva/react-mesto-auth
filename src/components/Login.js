@@ -32,15 +32,15 @@ function Login(props) {
 
   
   return (
-    <div className="login">
-      <Link to="/sign-up">Регистрация</Link>
-      <h2 className="login__title">Вход</h2>
-      <form action="#" className="login__form" onSubmit={handleSubmit}>
-        <fieldset className="login__fieldset">
-          <input type="email" className="login__input" placeholder="Email" value={loginData.email} onChange={handleChangeInputs} />
-          <input type="password" className="login__input" placeholder="Пароль" value={loginData.password} onChange={handleChangeInputs} />
+    <div className="auth">
+      <Link to="/sign-up" className="auth__btn">Регистрация</Link>
+      <h2 className="auth__title">Вход</h2>
+      <form action="#" className="auth__form" onSubmit={handleSubmit}>
+        <fieldset className="auth__fieldset">
+          <input type="email" className="auth__input" placeholder="Email" value={loginData.email} onChange={handleChangeInputs} />
+          <input type="password" className="auth__input" placeholder="Пароль" value={loginData.password} onChange={handleChangeInputs} />
         </fieldset>
-        <button className="login__btn">Войти</button>
+        <button className="auth__submit">Войти</button>
       </form>
     </div>
   );

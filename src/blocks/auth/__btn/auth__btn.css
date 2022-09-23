@@ -1,12 +1,15 @@
-.header__btn {
-  background-color: transparent;
+.auth__btn {
+  position: absolute;
+  top: 50px;
+  right: 275px;
   font-size: 18px;
   line-height: 1.22;
   color: var(--basic-white);
+  text-decoration: none;
   cursor: pointer;
   transition: opacity .6s;
 }
 
-.header__btn:hover {
+.auth__btn:hover {
   opacity: .8;
 }

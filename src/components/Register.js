@@ -13,7 +13,7 @@ function Register() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    
+
     auth
       .registration(userData)
       .then(() => setUserData({ email: "", password: "" }))
@@ -22,31 +22,31 @@ function Register() {
   };
 
   return (
-    <div className="login">
-      <Link to="sign-in">Войти</Link>
-      <h2 className="login__title">Регистрация</h2>
-      <form action="#" className="login__form" onSubmit={handleSubmit}>
-        <fieldset className="login__fieldset">
+    <div className="auth">
+      <Link to="sign-in" className="auth__btn">Войти</Link>
+      <h2 className="auth__title">Регистрация</h2>
+      <form action="#" className="auth__form" onSubmit={handleSubmit}>
+        <fieldset className="auth__fieldset">
           <input
             type="email"
-            className="login__input"
+            className="auth__input"
             placeholder="Email"
             value={userData.email}
             onChange={handleChangeInput}
           />
           <input
             type="password"
-            className="login__input"
+            className="auth__input"
             placeholder="Пароль"
             value={userData.password}
             onChange={handleChangeInput}
           />
         </fieldset>
-        <button type="submit" className="login__btn">
+        <button type="submit" className="auth__submit">
           Зарегистрироваться
         </button>
       </form>
-      <Link to="/sign-in" className="login__link">
+      <Link to="/sign-in" className="auth__link">
         Уже зарегистрированы? Войти
       </Link>
     </div>

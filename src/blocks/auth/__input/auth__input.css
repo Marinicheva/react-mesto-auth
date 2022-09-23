@@ -1,7 +1,6 @@
-.login__input {
+.auth__input {
   width: 358px;
   height: 27px;
-  
   color: var(--basic-white);
   background-color: transparent;
   border: none;

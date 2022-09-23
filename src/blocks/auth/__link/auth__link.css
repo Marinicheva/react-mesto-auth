@@ -1,4 +1,4 @@
-.login__link {
+.auth__link {
   margin-top: 15px;
   font-size: 14px;
   line-height: 1.2;
@@ -7,6 +7,6 @@
   transition: opacity .6s;
 }
 
-.login__link:hover {
+.auth__link:hover {
   opacity: .8;
 }
