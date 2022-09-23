@@ -1,64 +1,58 @@
 const BASE_URL = "https://auth.nomoreparties.co/";
 
-export const registration = (email, password) => {
-  return fetch(`${BASE_URL}signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password,
-      email,
-    }),
-  })
-  .then(res => {
+const request = ({ url, method = "POST", data, token }) => {
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const config = {
+    method,
+    headers,
+  };
+
+  if (data) {
+    config.body = JSON.stringify(data);
+  }
+
+  return fetch(`${BASE_URL}${url}`, config);
+};
+
+export const registration = (data) => {
+  return request({
+    url: "signup",
+    data,
+  }).then((res) => {
     if (res.ok) {
       return res.json();
     }
-  })
-  .then(res => res)
-  .catch(res => {
-    console.log(res)
   });
 };
 
-export const authorization = (email, password) => {
-  return fetch(`${BASE_URL}signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      password,
-      email,
-    }),
-  })
-  .then(res => {
+export const authorization = (data) => {
+  return request({
+    url: "signin",
+    data,
+  }).then((res) => {
     if (res.ok) {
       return res.json();
     }
-  })
-  .then(res => res)
-  .catch((error) => {
-    console.log(error)
   });
-}
+};
 
-export const checkToken = (token) => {
-  return fetch(`${BASE_URL}users/me`, {
+export const getContent = (token) => {
+  return request({
+    url: "users/me",
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization" : `Bearer ${token}`
-    }
+    token,
   })
-  .then(res => {
+  .then((res) => {
     if (res.ok) {
       return res.json();
     }
-  })
-  .then(res => res)
-  .catch((error) => {
-    console.log(error)
   });
-}
+};

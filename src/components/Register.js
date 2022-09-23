@@ -13,10 +13,9 @@ function Register() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    const { email, password } = userData;
-
+    
     auth
-      .registration(email, password)
+      .registration(userData)
       .then(() => setUserData({ email: "", password: "" }))
       .then(() => 
         history.push('/sign-in'));

@@ -14,9 +14,8 @@ function Login(props) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    const {email, password} = loginData;
 
-    auth.authorization(email, password)
+    auth.authorization(loginData)
       .then((data) => {
         if(data) {
           localStorage.setItem('token', data.token)
@@ -27,8 +26,8 @@ function Login(props) {
       })
       .then(() => {
         history.push("/");
-      });
-      
+      })
+      .catch(err => console.log(err));
   }
 
   
