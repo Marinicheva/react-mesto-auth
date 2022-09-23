@@ -19,17 +19,19 @@ const request = ({ url, method = "POST", data, token }) => {
     config.body = JSON.stringify(data);
   }
 
-  return fetch(`${BASE_URL}${url}`, config);
+  return fetch(`${BASE_URL}${url}`, config).then((res) => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(res.status)
+    }
+  });
 };
 
 export const registration = (data) => {
   return request({
     url: "signup",
     data,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
   });
 };
 
@@ -37,10 +39,6 @@ export const authorization = (data) => {
   return request({
     url: "signin",
     data,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
   });
 };
 
@@ -49,10 +47,5 @@ export const getContent = (token) => {
     url: "users/me",
     method: "GET",
     token,
-  })
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
   });
 };

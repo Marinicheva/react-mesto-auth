@@ -6,9 +6,12 @@ function Register() {
   const history = useHistory();
   const [userData, setUserData] = useState({ email: "", password: "" });
 
+  const [regError, setRegError] = useState('Что-то пошло не так, попробуйте еще раз.');
+  const [isErrorVisible, setIsErrorVisible] = useState(false);
+
   const handleChangeInput = (evt) => {
     const newData = { [evt.target.type]: evt.target.value };
-    setUserData((userData) => ({ ...userData, ...newData }));
+    setUserData(() => ({ ...userData, ...newData }));
   };
 
   const handleSubmit = (evt) => {
@@ -16,15 +19,24 @@ function Register() {
 
     auth
       .registration(userData)
-      .then(() => setUserData({ email: "", password: "" }))
+      .then(() => setUserData({ email: "", password: "" })) //Должно быть окно подтверждающее успешную регистрацию
       .then(() => 
-        history.push('/sign-in'));
+        history.push('/sign-in'))
+      .catch(err => {
+        if (err === 400) {
+          setRegError('Некорректно заполнено одно из полей');
+        }
+        setIsErrorVisible(true);
+      });
   };
+
+  const errorClassName = isErrorVisible ? "auth__error auth__error_active" : "auth__error";
 
   return (
     <div className="auth">
       <Link to="sign-in" className="auth__btn">Войти</Link>
       <h2 className="auth__title">Регистрация</h2>
+      <p className={errorClassName}>{regError}</p>
       <form action="#" className="auth__form" onSubmit={handleSubmit}>
         <fieldset className="auth__fieldset">
           <input

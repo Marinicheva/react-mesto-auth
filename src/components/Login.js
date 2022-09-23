@@ -9,7 +9,7 @@ function Login(props) {
 
   const handleChangeInputs = (evt) => {
     const newLoginData = { [evt.target.type]: evt.target.value };
-    setLoginData((userData) => ({ ...loginData, ...newLoginData }));
+    setLoginData(() => ({ ...loginData, ...newLoginData }));
   }
 
   const handleSubmit = (evt) => {

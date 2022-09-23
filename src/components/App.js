@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
+import * as auth from "../mestoAuth";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -19,8 +20,9 @@ import ImagePopup from "./ImagePopup";
 
 function App() {
   //Стейты
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -41,6 +43,30 @@ function App() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setLoggedIn(true);
+      auth.getContent(token).then((res) => {
+        setCurrentUserEmail(res.data.email);
+      });
+    }
+  }, [
+    loggedIn, 
+    currentUser, 
+    currentUserEmail, 
+    isEditProfilePopupOpen, 
+    isAddPlacePopupOpen, 
+    isEditAvatarPopupOpen, 
+    isDeleteCardPopupOpen, 
+    cards, 
+    selectedCard, 
+    deletedCard, 
+    isRenderLoading
+  ]);
 
   //Открытие попапов
   const handleEditAvatarClick = () => {
@@ -133,24 +159,23 @@ function App() {
       .finally(() => renderLoading());
   };
 
-  //Изменения стейта после авторизации пользователя
+  //Изменения стейта после авторизации и выхода пользователя
   const onSubmitLogin = (value) => {
+    setLoggedIn(value);
+  };
+
+  const onSignOut = (value) => {
     setLoggedIn(value);
   };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header loggedIn={loggedIn} />
+      <Header loggedIn={loggedIn} currentUserEmail={currentUserEmail} onSignOut={onSignOut}/>
 
-    
       <Switch>
-        <Route path="/sign-up">
-          {<Register />}
-        </Route>
+        <Route path="/sign-up">{<Register />}</Route>
 
-        <Route path="/sign-in">
-          {<Login onSubmitLogin={onSubmitLogin} />}
-        </Route>
+        <Route path="/sign-in">{<Login onSubmitLogin={onSubmitLogin} />}</Route>
 
         <ProtectedRoute
           path="/"
@@ -166,10 +191,9 @@ function App() {
         />
 
         <Route path="*">
-          { loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" /> }
+          {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
         </Route>
       </Switch>
-
 
       <Footer />
 

@@ -1,11 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import logo from "../images/logo.svg";
 
 function Header(props) {
+
+  const history = useHistory();
+
+  const onSignOutClick = () => {
+    localStorage.removeItem('token');
+    history.push("/sign-in");
+
+    props.onSignOut(false);
+  }
+
+
   const userData = (
     <div className="header__user">
-      <p className="header__email">email@example.com</p>
-      <button className="header__btn">Выйти</button>
+      <p className="header__email">{props.currentUserEmail}</p>
+      <button className="header__btn" type="buton" onClick={onSignOutClick}>Выйти</button>
     </div>
   );
 
