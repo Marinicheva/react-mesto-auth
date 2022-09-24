@@ -51,19 +51,9 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  useEffect(() => {checkToken();}, [
-      loggedIn,
-      currentUser,
-      currentUserEmail,
-      isEditProfilePopupOpen,
-      isAddPlacePopupOpen,
-      isEditAvatarPopupOpen,
-      isDeleteCardPopupOpen,
-      cards,
-      selectedCard,
-      deletedCard,
-      isRenderLoading,
-  ]);
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   //Открытие попапов
   const handleEditAvatarClick = () => {
@@ -220,13 +210,14 @@ function App() {
 
     if (!token) return;
 
-    auth.getContent(token)
+    auth
+      .getContent(token)
       .then((res) => {
         setCurrentUserEmail(res.data.email);
         setLoggedIn(true);
       })
       .then(() => {
-        history.push('/');
+        history.push("/");
       });
   };
 
