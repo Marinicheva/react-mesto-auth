@@ -52,8 +52,24 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+  
+      if (!token) return;
+  
+      auth
+        .getContent(token)
+        .then((res) => {
+          setCurrentUserEmail(res.data.email);
+          setLoggedIn(true);
+        })
+        .then(() => {
+          history.push("/");
+        });
+    };
+
     checkToken();
-  }, []);
+  }, [history]);
 
   //Открытие попапов
   const handleEditAvatarClick = () => {
@@ -205,21 +221,6 @@ function App() {
   };
 
   //Проверка наличия токена у пользователя
-  const checkToken = () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) return;
-
-    auth
-      .getContent(token)
-      .then((res) => {
-        setCurrentUserEmail(res.data.email);
-        setLoggedIn(true);
-      })
-      .then(() => {
-        history.push("/");
-      });
-  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
