@@ -15,7 +15,8 @@ function Login(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    props.onLogin(loginData).then(() => setLoginData(initialValues));
+    props.onLogin(loginData)
+      .then((data) => {if (data) setLoginData(initialValues)});
   };
 
   return (

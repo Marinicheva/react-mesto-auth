@@ -17,14 +17,12 @@ import AddPlacePopup from "./AddPlacePopup";
 import DeleteCardPopup from "./DeleteCardPopup";
 import ImagePopup from "./ImagePopup";
 
-import successIcon from '../images/success-signup.svg';
-import errorIcon from '../images/error-login.svg';
-import {loginMessages, registrationMessages} from "../utils/constants";
+import successIcon from "../images/success-signup.svg";
+import errorIcon from "../images/error-login.svg";
+import { loginMessages, registrationMessages } from "../utils/constants";
 
 function App() {
-
   const history = useHistory();
-
 
   //Стейты
   const [loggedIn, setLoggedIn] = useState(null);
@@ -37,7 +35,7 @@ function App() {
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
-  const [infoContent, setInfoContent] = useState({icon: null, text: null})
+  const [infoContent, setInfoContent] = useState({ icon: null, text: null });
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [deletedCard, setDeletedCard] = useState("");
@@ -53,27 +51,18 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setLoggedIn(true);
-      auth.getContent(token).then((res) => {
-        setCurrentUserEmail(res.data.email);
-      });
-    }
-  }, [
-    loggedIn,
-    currentUser,
-    currentUserEmail,
-    isEditProfilePopupOpen,
-    isAddPlacePopupOpen,
-    isEditAvatarPopupOpen,
-    isDeleteCardPopupOpen,
-    cards,
-    selectedCard,
-    deletedCard,
-    isRenderLoading,
+  useEffect(() => {checkToken();}, [
+      loggedIn,
+      currentUser,
+      currentUserEmail,
+      isEditProfilePopupOpen,
+      isAddPlacePopupOpen,
+      isEditAvatarPopupOpen,
+      isDeleteCardPopupOpen,
+      cards,
+      selectedCard,
+      deletedCard,
+      isRenderLoading,
   ]);
 
   //Открытие попапов
@@ -171,28 +160,36 @@ function App() {
   //Регистрация, авторизация, выход из приложения
   const handleRegister = (userData) => {
     return auth
-    .registration(userData)
-    .then(() => setInfoContent({icon: successIcon, text: 'Вы успешно зарегистрировались!'}))
-    .then(() => setIsInfoOpen(true))
-    .then(() => {
-      setTimeout(() => {
-        history.push('/');
-        setIsInfoOpen(false)
-      }, 2000)
-    })
-    .catch((resCode) => {
-      const registrationMessage = registrationMessages[resCode] ? registrationMessages[resCode] : "Что-то пошло не так! Попробуйте ещё раз.";
+      .registration(userData)
+      .then(() =>
+        setInfoContent({
+          icon: successIcon,
+          text: "Вы успешно зарегистрировались!",
+        })
+      )
+      .then(() => setIsInfoOpen(true))
+      .then(() => {
+        setTimeout(() => {
+          history.push("/");
+          setIsInfoOpen(false);
+        }, 2000);
+      })
+      .catch((resCode) => {
+        const registrationMessage = registrationMessages[resCode]
+          ? registrationMessages[resCode]
+          : "Что-то пошло не так! Попробуйте ещё раз.";
 
-      setInfoContent({icon: errorIcon, text: registrationMessage});
-      setIsInfoOpen(true);
-    });
-  }
+        setInfoContent({ icon: errorIcon, text: registrationMessage });
+        setIsInfoOpen(true);
+      });
+  };
 
   const handleLogin = (loginData) => {
-    return auth.authorization(loginData)
+    return auth
+      .authorization(loginData)
       .then((data) => {
-        if(data) {
-          localStorage.setItem('token', data.token)
+        if (data) {
+          localStorage.setItem("token", data.token);
         }
       })
       .then(() => {
@@ -201,19 +198,37 @@ function App() {
       .then(() => {
         history.push("/");
       })
-      .catch((errorCode) => { 
-        const errorMessage = loginMessages[errorCode] ? loginMessages[errorCode] : "Что-то пошло не так! Попробуйте ещё раз.";
+      .catch((errorCode) => {
+        const errorMessage = loginMessages[errorCode]
+          ? loginMessages[errorCode]
+          : "Что-то пошло не так! Попробуйте ещё раз.";
 
-        setInfoContent({icon: errorIcon, text: errorMessage});
+        setInfoContent({ icon: errorIcon, text: errorMessage });
         setIsInfoOpen(true);
-      })
+      });
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setLoggedIn(false);
     history.push("/sign-in");
-  }
+  };
+
+  //Проверка наличия токена у пользователя
+  const checkToken = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    auth.getContent(token)
+      .then((res) => {
+        setCurrentUserEmail(res.data.email);
+        setLoggedIn(true);
+      })
+      .then(() => {
+        history.push('/');
+      });
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -224,7 +239,9 @@ function App() {
       />
 
       <Switch>
-        <Route path="/sign-up">{<Register onRegister={handleRegister} />}</Route>
+        <Route path="/sign-up">
+          {<Register onRegister={handleRegister} />}
+        </Route>
 
         <Route path="/sign-in">{<Login onLogin={handleLogin} />}</Route>
 
@@ -247,7 +264,7 @@ function App() {
 
       <Footer />
 
-      <InfoTooltip 
+      <InfoTooltip
         icon={infoContent.icon}
         text={infoContent.text}
         isOpen={isInfoOpen}
