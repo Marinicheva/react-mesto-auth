@@ -1,4 +1,4 @@
-import { API_URL, TOKEN } from "./utils";
+import { API_URL, TOKEN } from "./constants";
 
 class Api {
   constructor(url, token) {

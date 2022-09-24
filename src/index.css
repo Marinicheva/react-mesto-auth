@@ -39,8 +39,6 @@
 @import url(./blocks/auth/__input/auth__input.css);
 @import url(./blocks/auth/__submit/auth__submit.css);
 @import url(./blocks/auth/__link/auth__link.css);
-@import url(./blocks/auth/__error/auth__error.css);
-@import url(./blocks/auth/__error/_active/auth__error_active.css);
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__copyright/footer__copyright.css);
 @import url(./blocks/popup/popup.css);

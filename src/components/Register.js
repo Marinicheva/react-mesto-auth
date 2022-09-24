@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
-import * as auth from "../mestoAuth";
+import { Link } from "react-router-dom";
+import {initialValues} from '../utils/constants';
 
-function Register() {
-  const history = useHistory();
-  const [userData, setUserData] = useState({ email: "", password: "" });
+function Register(props) {
+  const [userData, setUserData] = useState(initialValues);
 
-  const [regError, setRegError] = useState('Что-то пошло не так, попробуйте еще раз.');
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
 
   const handleChangeInput = (evt) => {
     const { name, value } = evt.target;
@@ -18,30 +15,20 @@ function Register() {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    auth
-      .registration(userData)
-      .then(() => setUserData({ email: "", password: "" })) //Должно быть окно подтверждающее успешную регистрацию
-      .then(() => 
-        history.push('/sign-in'))
-      .catch(err => {
-        if (err === 400) {
-          setRegError('Некорректно заполнено одно из полей');
-        }
-        setIsErrorVisible(true);
-      });
+    props.onRegister(userData)
+      .then(() => setUserData(initialValues));
   };
 
-  const errorClassName = isErrorVisible ? "auth__error auth__error_active" : "auth__error";
 
   return (
     <div className="auth">
       <Link to="sign-in" className="auth__btn">Войти</Link>
       <h2 className="auth__title">Регистрация</h2>
-      <p className={errorClassName}>{regError}</p>
       <form action="#" className="auth__form" onSubmit={handleSubmit}>
         <fieldset className="auth__fieldset">
           <input
             type="email"
+            name="email"
             className="auth__input"
             placeholder="Email"
             value={userData.email}
@@ -49,6 +36,7 @@ function Register() {
           />
           <input
             type="password"
+            name="password"
             className="auth__input"
             placeholder="Пароль"
             value={userData.password}

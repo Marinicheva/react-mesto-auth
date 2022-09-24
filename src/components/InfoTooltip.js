@@ -1,18 +1,15 @@
-import successIcon from '../images/success-login.svg';
-import errorIcon from '../images/error-login.svg';
-
 function InfoTooltip(props) {
-  const tipText = props.sucsess ? "Вы успешно зарегистрировались!" :  "Что-то пошло не так! Попробуйте ещё раз.";
-  const tipIcon = props.sucsess ? successIcon : errorIcon;
+  const popupClassName = `popup popup_type_alert ${props.isOpen ? "popup_opened" : null}`;
 
   return (
-    <div className="popup popup_type_alert">
+    <div className={popupClassName}>
       <div className="popup__container">
-        <img src={tipIcon} alt="" className="popup__icon" />
-        <h2 className="popup__title popup__title_align_center">{tipText}</h2>
+        <img src={props.icon} alt="" className="popup__icon" />
+        <h2 className="popup__title popup__title_align_center">{props.text}</h2>
         <button
           className="popup__close"
           type="button"
+          onClick={props.onClose}
         ></button>
       </div>
     </div>

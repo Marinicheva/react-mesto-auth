@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 import * as auth from "../mestoAuth";
 
 import ProtectedRoute from "./ProtectedRoute";
-
 import Header from "./Header";
 import Login from "./Login";
 import Register from "./Register";
@@ -18,7 +17,15 @@ import AddPlacePopup from "./AddPlacePopup";
 import DeleteCardPopup from "./DeleteCardPopup";
 import ImagePopup from "./ImagePopup";
 
+import successIcon from '../images/success-signup.svg';
+import errorIcon from '../images/error-login.svg';
+import {loginMessages, registrationMessages} from "../utils/constants";
+
 function App() {
+
+  const history = useHistory();
+
+
   //Стейты
   const [loggedIn, setLoggedIn] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
@@ -28,7 +35,9 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
+  const [infoContent, setInfoContent] = useState({icon: null, text: null})
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [deletedCard, setDeletedCard] = useState("");
@@ -44,7 +53,6 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -55,17 +63,17 @@ function App() {
       });
     }
   }, [
-    loggedIn, 
-    currentUser, 
-    currentUserEmail, 
-    isEditProfilePopupOpen, 
-    isAddPlacePopupOpen, 
-    isEditAvatarPopupOpen, 
-    isDeleteCardPopupOpen, 
-    cards, 
-    selectedCard, 
-    deletedCard, 
-    isRenderLoading
+    loggedIn,
+    currentUser,
+    currentUserEmail,
+    isEditProfilePopupOpen,
+    isAddPlacePopupOpen,
+    isEditAvatarPopupOpen,
+    isDeleteCardPopupOpen,
+    cards,
+    selectedCard,
+    deletedCard,
+    isRenderLoading,
   ]);
 
   //Открытие попапов
@@ -94,6 +102,7 @@ function App() {
     setIsDeleteCardPopupOpen(false);
     setSelectedCard(null);
     setDeletedCard(null);
+    setIsInfoOpen(false);
   };
 
   //Рендер загрузки
@@ -159,36 +168,77 @@ function App() {
       .finally(() => renderLoading());
   };
 
-  //Изменения стейта после авторизации и выхода пользователя
-  const onSubmitLogin = (value) => {
-    setLoggedIn(value);
+  //Регистрация, авторизация, выход из приложения
+  const handleRegister = (userData) => {
+    return auth
+    .registration(userData)
+    .then(() => setInfoContent({icon: successIcon, text: 'Вы успешно зарегистрировались!'}))
+    .then(() => setIsInfoOpen(true))
+    .then(() => {
+      setTimeout(() => {
+        history.push('/');
+        setIsInfoOpen(false)
+      }, 2000)
+    })
+    .catch((resCode) => {
+      const registrationMessage = registrationMessages[resCode] ? registrationMessages[resCode] : "Что-то пошло не так! Попробуйте ещё раз.";
+
+      setInfoContent({icon: errorIcon, text: registrationMessage});
+      setIsInfoOpen(true);
+    });
+  }
+
+  const handleLogin = (loginData) => {
+    return auth.authorization(loginData)
+      .then((data) => {
+        if(data) {
+          localStorage.setItem('token', data.token)
+        }
+      })
+      .then(() => {
+        setLoggedIn(true);
+      })
+      .then(() => {
+        history.push("/");
+      })
+      .catch((errorCode) => { 
+        const errorMessage = loginMessages[errorCode] ? loginMessages[errorCode] : "Что-то пошло не так! Попробуйте ещё раз.";
+
+        setInfoContent({icon: errorIcon, text: errorMessage});
+        setIsInfoOpen(true);
+      })
   };
 
-  const onSignOut = (value) => {
-    setLoggedIn(value);
-  };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    history.push("/sign-in");
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header loggedIn={loggedIn} currentUserEmail={currentUserEmail} onSignOut={onSignOut}/>
+      <Header
+        loggedIn={loggedIn}
+        currentUserEmail={currentUserEmail}
+        onLogout={handleLogout}
+      />
 
       <Switch>
-        <Route path="/sign-up">{<Register />}</Route>
+        <Route path="/sign-up">{<Register onRegister={handleRegister} />}</Route>
 
-        <Route path="/sign-in">{<Login onSubmitLogin={onSubmitLogin} />}</Route>
+        <Route path="/sign-in">{<Login onLogin={handleLogin} />}</Route>
 
-        <ProtectedRoute
-          path="/"
-          loggedIn={loggedIn}
-          component={Main}
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteCardClick}
-        />
+        <ProtectedRoute path="/" loggedIn={loggedIn}>
+          <Main
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardClick}
+          />
+        </ProtectedRoute>
 
         <Route path="*">
           {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
@@ -197,7 +247,12 @@ function App() {
 
       <Footer />
 
-      <InfoTooltip />
+      <InfoTooltip 
+        icon={infoContent.icon}
+        text={infoContent.text}
+        isOpen={isInfoOpen}
+        onClose={closeAllPopups}
+      />
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
