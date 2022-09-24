@@ -10,8 +10,9 @@ function Register() {
   const [isErrorVisible, setIsErrorVisible] = useState(false);
 
   const handleChangeInput = (evt) => {
-    const newData = { [evt.target.type]: evt.target.value };
-    setUserData(() => ({ ...userData, ...newData }));
+    const { name, value } = evt.target;
+    
+    setUserData((state) => ({ ...state, [name]: value }));
   };
 
   const handleSubmit = (evt) => {

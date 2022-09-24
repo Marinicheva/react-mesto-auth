@@ -7,10 +7,11 @@ function Login(props) {
 
   const [loginData, setLoginData] = useState({email: '', password: ''});
 
-  const handleChangeInputs = (evt) => {
-    const newLoginData = { [evt.target.type]: evt.target.value };
-    setLoginData(() => ({ ...loginData, ...newLoginData }));
-  }
+  const handleChangeInput = (evt) => {
+    const { name, value } = evt.target;
+    
+    setLoginData((state) => ({ ...state, [name]: value }));
+  };
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -37,8 +38,8 @@ function Login(props) {
       <h2 className="auth__title">Вход</h2>
       <form action="#" className="auth__form" onSubmit={handleSubmit}>
         <fieldset className="auth__fieldset">
-          <input type="email" className="auth__input" placeholder="Email" value={loginData.email} onChange={handleChangeInputs} />
-          <input type="password" className="auth__input" placeholder="Пароль" value={loginData.password} onChange={handleChangeInputs} />
+          <input type="email" className="auth__input" placeholder="Email" value={loginData.email} onChange={handleChangeInput} />
+          <input type="password" className="auth__input" placeholder="Пароль" value={loginData.password} onChange={handleChangeInput} />
         </fieldset>
         <button className="auth__submit">Войти</button>
       </form>
