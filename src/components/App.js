@@ -27,7 +27,6 @@ function App() {
   //Стейты
   const [loggedIn, setLoggedIn] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
-  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -46,7 +45,7 @@ function App() {
     Promise.all([api.getCardList(), api.getUserInfo()])
       .then(([cardsData, userData]) => {
         setCards(cardsData);
-        setCurrentUser(userData);
+        setCurrentUser((state) => ({...state, ...userData}) );
       })
       .catch((err) => console.error(err));
   }, []);
@@ -60,7 +59,7 @@ function App() {
       auth
         .getContent(token)
         .then((res) => {
-          setCurrentUserEmail(res.data.email);
+          setCurrentUser((state) => ({...state, email: res.data.email}) );
           setLoggedIn(true);
         })
         .then(() => {
@@ -226,7 +225,6 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <Header
         loggedIn={loggedIn}
-        currentUserEmail={currentUserEmail}
         onLogout={handleLogout}
       />
 
