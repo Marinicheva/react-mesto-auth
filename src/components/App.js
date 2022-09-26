@@ -147,7 +147,7 @@ function App() {
   const handleUpdateUser = (data) => {
     api
       .setUserInfo(data)
-      .then((newData) => setCurrentUser(newData))
+      .then((newData) => setCurrentUser(state => ({...state,...newData})))
       .then(() => closeAllPopups())
       .catch((err) => console.log(err))
       .finally(() => renderLoading());
@@ -156,7 +156,7 @@ function App() {
   const handleUpdateAvatar = (avatarData) => {
     api
       .setUserAvatar(avatarData)
-      .then((newData) => setCurrentUser(newData))
+      .then((newData) => setCurrentUser(state => ({...state,...newData})))
       .then(() => closeAllPopups())
       .catch((err) => console.log(err))
       .finally(() => renderLoading());
@@ -195,6 +195,7 @@ function App() {
       .then((data) => {
         if (data) {
           localStorage.setItem("token", data.token);
+          setCurrentUser((state) => ({...state, email: loginData.email}));
         }
       })
       .then(() => {
