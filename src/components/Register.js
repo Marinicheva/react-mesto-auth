@@ -16,7 +16,7 @@ function Register(props) {
     evt.preventDefault();
 
     props.onRegister(userData)
-      .then(() => setUserData(initialValues));
+      .then((data) => {if (data) setUserData(initialValues)});
   };
 
 
