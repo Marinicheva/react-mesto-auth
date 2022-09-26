@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import api from "../utils/api";
-import * as auth from "../mestoAuth";
+import * as auth from "../utils/mestoAuth";
 
 import ProtectedRoute from "./ProtectedRoute";
 import Header from "./Header";
@@ -177,7 +177,7 @@ function App() {
         setTimeout(() => {
           history.push("/");
           setIsInfoOpen(false);
-        }, 2000);
+        }, 1500);
       })
       .catch((resCode) => {
         const registrationMessage = registrationMessages[resCode]
