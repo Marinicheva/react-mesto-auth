@@ -4,6 +4,7 @@
   background-color: transparent;
   color: var(--basic-white);
   text-decoration: none;
+  border: none;
   cursor: pointer;
   transition: opacity 0.6s;
 }
