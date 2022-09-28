@@ -4,7 +4,7 @@ const initialValues = {email: '', password: ''};
 
 const loginMessages = {
   400: "Не заполнено одно из полей ",
-  401: "Пользователь с таким e-mail не найден"
+  401: "Введен неверный e-mail или пароль. Проверьте правильность вводимых данных"
 }
 
 const registrationMessages = {
