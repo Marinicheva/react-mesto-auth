@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import {initialValues} from '../utils/constants';
 
 function Register(props) {
   const [userData, setUserData] = useState(initialValues);
+
+  useEffect(() => {
+    setUserData(initialValues);
+  }, []);
 
 
   const handleChangeInput = (evt) => {
@@ -15,8 +20,7 @@ function Register(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    props.onRegister(userData)
-      .then((data) => {if (data) setUserData(initialValues)});
+    props.onRegister(userData);
   };
 
 
