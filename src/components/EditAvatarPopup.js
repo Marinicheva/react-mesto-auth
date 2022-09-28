@@ -13,9 +13,8 @@ function EditAvatarPopup({
 
   useEffect(() => {
     avatarInput.current.value = "";
-  }, [isOpen])
+  }, [isOpen, avatarInput])
 
-  
   const handleSubmit = (evt) => {
     evt.preventDefault();
     renderLoading();
