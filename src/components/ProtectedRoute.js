@@ -1,7 +1,11 @@
-import { Redirect } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 
 function ProtectedRoute({ loggedIn, children }) {
-  return loggedIn ? children : <Redirect to="/sign-in" />;
+  return (
+    <Route>
+      {loggedIn ? children : <Redirect to="/sign-in" />}
+    </Route>
+  );
 }
 
 export default ProtectedRoute;
