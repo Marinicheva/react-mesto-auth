@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { initialValues } from "../utils/constants";
 
 function Login(props) {
   const [loginData, setLoginData] = useState(initialValues);
+
+  useEffect(() => {
+    setLoginData(initialValues);
+  }, []);
 
   const handleChangeInput = (evt) => {
     const { name, value } = evt.target;
@@ -15,8 +19,7 @@ function Login(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    props.onLogin(loginData)
-      .then((data) => {if (data) setLoginData(initialValues)});
+    props.onLogin(loginData);
   };
 
   return (

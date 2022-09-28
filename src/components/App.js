@@ -234,7 +234,9 @@ function App() {
           {<Register onRegister={handleRegister} />}
         </Route>
 
-        <Route path="/sign-in">{<Login onLogin={handleLogin} />}</Route>
+        <Route path="/sign-in">
+          {<Login onLogin={handleLogin} />}
+        </Route>
 
         <ProtectedRoute path="/" loggedIn={loggedIn}>
           <Main
