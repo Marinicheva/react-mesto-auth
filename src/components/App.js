@@ -41,6 +41,8 @@ function App() {
 
   const [isRenderLoading, setIsRenderLoading] = useState(false);
 
+
+  //Эффекты при монтировании/обновлении компонента
   useEffect(() => {
     Promise.all([api.getCardList(), api.getUserInfo()])
       .then(([cardsData, userData]) => {
@@ -61,11 +63,10 @@ function App() {
         .then((res) => {
           setCurrentUser((state) => ({...state, email: res.data.email}) );
           setLoggedIn(true);
-        })
-        .then(() => {
           history.push("/");
-        });
-    };
+        })
+        .catch((err) => console.log(err));
+    }; 
 
     checkToken();
   }, [history]);
@@ -100,7 +101,7 @@ function App() {
   };
 
   //Рендер загрузки
-  const renderLoading = () => {
+  const toggleRenderLoading = () => {
     setIsRenderLoading((isRenderLoading) => !isRenderLoading);
   };
 
@@ -128,52 +129,57 @@ function App() {
         setCards((state) =>
           state.filter((item) => item._id !== deletedCard._id)
         );
+        closeAllPopups();
       })
-      .then(() => closeAllPopups())
       .catch((err) => console.log(err))
-      .finally(() => renderLoading());
+      .finally(() => toggleRenderLoading());
   };
 
   const handleAddPlaceSubmit = (cardData) => {
     api
       .addNewCard(cardData)
-      .then((data) => setCards([data, ...cards]))
-      .then(() => closeAllPopups())
+      .then((data) => {
+        setCards([data, ...cards]);
+        closeAllPopups();
+      })
       .catch((err) => console.error(err))
-      .finally(() => renderLoading());
+      .finally(() => toggleRenderLoading());
   };
 
   //Изменение данных пользователя (данные, аватар)
   const handleUpdateUser = (data) => {
     api
       .setUserInfo(data)
-      .then((newData) => setCurrentUser(state => ({...state,...newData})))
-      .then(() => closeAllPopups())
+      .then((newData) => {
+        setCurrentUser(state => ({...state,...newData}));
+        closeAllPopups();
+      })
       .catch((err) => console.log(err))
-      .finally(() => renderLoading());
+      .finally(() => toggleRenderLoading());
   };
 
   const handleUpdateAvatar = (avatarData) => {
     api
       .setUserAvatar(avatarData)
-      .then((newData) => setCurrentUser(state => ({...state,...newData})))
-      .then(() => closeAllPopups())
+      .then((newData) => {
+        setCurrentUser(state => ({...state,...newData}));
+        closeAllPopups();
+      })
       .catch((err) => console.log(err))
-      .finally(() => renderLoading());
+      .finally(() => toggleRenderLoading());
   };
 
   //Регистрация, авторизация, выход из приложения
   const handleRegister = (userData) => {
     return auth
       .registration(userData)
-      .then(() =>
+      .then(() => {
         setInfoContent({
           icon: successIcon,
           text: "Вы успешно зарегистрировались!",
-        })
-      )
-      .then(() => setIsInfoOpen(true))
-      .then(() => {
+        });
+        setIsInfoOpen(true);
+
         setTimeout(() => {
           history.push("/");
           setIsInfoOpen(false);
@@ -197,11 +203,7 @@ function App() {
           localStorage.setItem("token", data.token);
           setCurrentUser((state) => ({...state, email: loginData.email}));
         }
-      })
-      .then(() => {
         setLoggedIn(true);
-      })
-      .then(() => {
         history.push("/");
       })
       .catch((errorCode) => {
@@ -219,8 +221,6 @@ function App() {
     setLoggedIn(false);
     history.push("/sign-in");
   };
-
-  //Проверка наличия токена у пользователя
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -267,7 +267,7 @@ function App() {
         onClose={closeAllPopups}
         onUpdateUser={handleUpdateUser}
         isRenderLoading={isRenderLoading}
-        renderLoading={renderLoading}
+        renderLoading={toggleRenderLoading}
         renderLoadingButtonText={"Сохранение..."}
       />
 
@@ -276,7 +276,7 @@ function App() {
         onClose={closeAllPopups}
         onUpdateAvatar={handleUpdateAvatar}
         isRenderLoading={isRenderLoading}
-        renderLoading={renderLoading}
+        renderLoading={toggleRenderLoading}
         renderLoadingButtonText={"Обновление..."}
       />
 
@@ -285,7 +285,7 @@ function App() {
         onClose={closeAllPopups}
         onAddNewCard={handleAddPlaceSubmit}
         isRenderLoading={isRenderLoading}
-        renderLoading={renderLoading}
+        renderLoading={toggleRenderLoading}
         renderLoadingButtonText={"Добавление..."}
       />
 
@@ -293,7 +293,7 @@ function App() {
         isOpen={isDeleteCardPopupOpen}
         onClose={closeAllPopups}
         isRenderLoading={isRenderLoading}
-        renderLoading={renderLoading}
+        renderLoading={toggleRenderLoading}
         onDeleteCard={handleCardDelete}
       />
 
